@@ -12,10 +12,12 @@ function ShoppingCartItem({
   quantity,
   // unitsInStock,
   // handleChange,
-  // handleRemove,
+  handleRemove,
 }) {
   function onHandleChange() {}
-  function onHandleRemove() {}
+  function onHandleRemove(id) {
+    handleRemove(id);
+  }
 
   return (
     <div className="col">

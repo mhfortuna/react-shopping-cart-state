@@ -36,8 +36,10 @@ function Home({
                   <p className="font-weight-bold">Buy now!</p>
                 </header>
               </div>
-              {/* {isLoading Loading products...} */}
-              {/* {hasError ...} */}
+              {isLoading ? "Loading products..." : null}
+              {hasError
+                ? "<h2>Something went wrong...</h2><pre><code>{loadingError}</code></pre>"
+                : null}
               {!isLoading && !hasError && (
                 <div className="col col-12">
                   <ProductsListing

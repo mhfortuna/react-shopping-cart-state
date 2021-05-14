@@ -5,6 +5,20 @@ import Home from "./pages/Home";
 import * as api from "./api";
 
 class App extends Component {
+  static findObjectByIdInArray(key, array) {
+    const productData = array.find((selectedProduct) => {
+      return selectedProduct.id === key;
+    });
+    return productData;
+  }
+
+  static findObjectIndexByIdInArray(key, array) {
+    const productData = array.findIndex((selectedProduct) => {
+      return selectedProduct.id === key;
+    });
+    return productData;
+  }
+
   constructor(props) {
     super(props);
 
@@ -15,6 +29,8 @@ class App extends Component {
       hasError: false,
       loadingError: null,
     };
+    this.handleAddToCart = this.handleAddToCart.bind(this);
+    this.handleRemove = this.handleRemove.bind(this);
   }
 
   componentDidMount() {
@@ -30,11 +46,53 @@ class App extends Component {
     });
   }
 
-  // handleAddToCart(productId) {}
+  handleAddToCart(productId) {
+    const { products, cartItems } = this.state;
+    /* const foundItem = cartItems.find((element) => {
+      return element.id === productId;
+    }); */
+    /* const productData = products.find((selectedProduct) => {
+      return selectedProduct.id === productId;
+    }); */
+    const cartItem = App.findObjectByIdInArray(productId, cartItems);
+    const productData = App.findObjectByIdInArray(productId, products);
+
+    if (cartItem === undefined) {
+      cartItems.push({
+        id: productId,
+        title: productData.title,
+        img: productData.img,
+        price: productData.price,
+        unitsInStock: productData.unitsInStock,
+        createdAt: new Date().toISOString(),
+        updatedAt: new Date().toISOString(),
+        quantity: 1,
+      });
+      this.setState({ cartItems: cartItems });
+    } else {
+      /* const cartItemId = cartItems.findIndex((element) => {
+        return element.id === productId;
+      }); */
+      const cartItemId = App.findObjectIndexByIdInArray(productId, cartItems);
+      if (productData.unitsInStock > cartItems[cartItemId].quantity) {
+        cartItems[cartItemId].quantity += 1;
+        cartItems[cartItemId].updatedAt = new Date().toISOString();
+        this.setState({ cartItems });
+      }
+    }
+    // console.log(products);
+  }
 
   // handleChange(event, productId) {}
 
-  // handleRemove(productId) {}
+  handleRemove(productId) {
+    const { cartItems } = this.state;
+    // const cartItem = App.findObjectByIdInArray(productId, cartItems);
+    // const productData = App.findObjectByIdInArray(productId, products);
+    const cartItemId = App.findObjectIndexByIdInArray(productId, cartItems);
+    cartItems.splice(cartItemId, 1);
+    this.setState({ cartItems });
+  }
 
   // handleDownVote(productId) {}
 
@@ -61,8 +119,8 @@ class App extends Component {
         handleDownVote={() => {}}
         handleUpVote={() => {}}
         handleSetFavorite={() => {}}
-        handleAddToCart={() => {}}
-        handleRemove={() => {}}
+        handleAddToCart={this.handleAddToCart}
+        handleRemove={this.handleRemove}
         handleChange={() => {}}
       />
     );
