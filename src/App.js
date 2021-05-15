@@ -33,6 +33,8 @@ class App extends Component {
     this.handleRemove = this.handleRemove.bind(this);
     this.handleChange = this.handleChange.bind(this);
     this.handleSetFavorite = this.handleSetFavorite.bind(this);
+    this.handleUpVote = this.handleUpVote.bind(this);
+    this.handleDownVote = this.handleDownVote.bind(this);
   }
 
   componentDidMount() {
@@ -101,14 +103,32 @@ class App extends Component {
     this.setState({ cartItems });
   }
 
-  // handleDownVote(productId) {}
+  handleDownVote(productId) {
+    const { products } = this.state;
+    const productIndex = App.findObjectIndexByIdInArray(productId, products);
+    if (
+      products[productIndex].votes.downVotes.currentValue <
+      products[productIndex].votes.downVotes.lowerLimit
+    ) {
+      products[productIndex].votes.downVotes.currentValue += 1;
+    }
+    this.setState({ products });
+  }
 
-  // handleUpVote(productId) {}
+  handleUpVote(productId) {
+    const { products } = this.state;
+    const productIndex = App.findObjectIndexByIdInArray(productId, products);
+    if (
+      products[productIndex].votes.upVotes.currentValue <
+      products[productIndex].votes.upVotes.upperLimit
+    ) {
+      products[productIndex].votes.upVotes.currentValue += 1;
+    }
+    this.setState({ products });
+  }
 
   handleSetFavorite(productId) {
     const { products } = this.state;
-    console.log(productId);
-    console.log(products);
     const productIndex = App.findObjectIndexByIdInArray(productId, products);
     products[productIndex].isFavorite = !products[productIndex].isFavorite;
     this.setState({ products });
@@ -130,8 +150,8 @@ class App extends Component {
         isLoading={isLoading}
         hasError={hasError}
         loadingError={loadingError}
-        handleDownVote={() => {}}
-        handleUpVote={() => {}}
+        handleDownVote={this.handleDownVote}
+        handleUpVote={this.handleUpVote}
         handleSetFavorite={this.handleSetFavorite}
         handleAddToCart={this.handleAddToCart}
         handleRemove={this.handleRemove}
