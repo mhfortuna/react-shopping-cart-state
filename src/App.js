@@ -31,6 +31,7 @@ class App extends Component {
     };
     this.handleAddToCart = this.handleAddToCart.bind(this);
     this.handleRemove = this.handleRemove.bind(this);
+    this.handleChange = this.handleChange.bind(this);
   }
 
   componentDidMount() {
@@ -80,10 +81,18 @@ class App extends Component {
         this.setState({ cartItems });
       }
     }
-    // console.log(products);
   }
 
-  // handleChange(event, productId) {}
+  handleChange(value, productId) {
+    const { products, cartItems } = this.state;
+    const productData = App.findObjectByIdInArray(productId, products);
+    const cartItemId = App.findObjectIndexByIdInArray(productId, cartItems);
+    if (productData.unitsInStock >= value) {
+      cartItems[cartItemId].quantity = value;
+      cartItems[cartItemId].updatedAt = new Date().toISOString();
+      this.setState({ cartItems });
+    }
+  }
 
   handleRemove(productId) {
     const { cartItems } = this.state;
@@ -121,7 +130,7 @@ class App extends Component {
         handleSetFavorite={() => {}}
         handleAddToCart={this.handleAddToCart}
         handleRemove={this.handleRemove}
-        handleChange={() => {}}
+        handleChange={this.handleChange}
       />
     );
   }
