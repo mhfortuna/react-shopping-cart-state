@@ -32,6 +32,7 @@ class App extends Component {
     this.handleAddToCart = this.handleAddToCart.bind(this);
     this.handleRemove = this.handleRemove.bind(this);
     this.handleChange = this.handleChange.bind(this);
+    this.handleSetFavorite = this.handleSetFavorite.bind(this);
   }
 
   componentDidMount() {
@@ -84,14 +85,11 @@ class App extends Component {
   }
 
   handleChange(value, productId) {
-    const { products, cartItems } = this.state;
-    const productData = App.findObjectByIdInArray(productId, products);
+    const { cartItems } = this.state;
     const cartItemId = App.findObjectIndexByIdInArray(productId, cartItems);
-    if (productData.unitsInStock >= value) {
-      cartItems[cartItemId].quantity = value;
-      cartItems[cartItemId].updatedAt = new Date().toISOString();
-      this.setState({ cartItems });
-    }
+    cartItems[cartItemId].quantity = value;
+    cartItems[cartItemId].updatedAt = new Date().toISOString();
+    this.setState({ cartItems });
   }
 
   handleRemove(productId) {
@@ -107,7 +105,14 @@ class App extends Component {
 
   // handleUpVote(productId) {}
 
-  // handleSetFavorite(productId) {}
+  handleSetFavorite(productId) {
+    const { products } = this.state;
+    console.log(productId);
+    console.log(products);
+    const productIndex = App.findObjectIndexByIdInArray(productId, products);
+    products[productIndex].isFavorite = !products[productIndex].isFavorite;
+    this.setState({ products });
+  }
 
   render() {
     const {
@@ -127,7 +132,7 @@ class App extends Component {
         loadingError={loadingError}
         handleDownVote={() => {}}
         handleUpVote={() => {}}
-        handleSetFavorite={() => {}}
+        handleSetFavorite={this.handleSetFavorite}
         handleAddToCart={this.handleAddToCart}
         handleRemove={this.handleRemove}
         handleChange={this.handleChange}
