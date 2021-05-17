@@ -18,6 +18,7 @@ class App extends Component {
     });
     return productData;
   }
+  // Better to leave this 2 methods as functions in the file
 
   constructor(props) {
     super(props);
@@ -52,12 +53,6 @@ class App extends Component {
 
   handleAddToCart(productId) {
     const { products, cartItems } = this.state;
-    /* const foundItem = cartItems.find((element) => {
-      return element.id === productId;
-    }); */
-    /* const productData = products.find((selectedProduct) => {
-      return selectedProduct.id === productId;
-    }); */
     const cartItem = App.findObjectByIdInArray(productId, cartItems);
     const productData = App.findObjectByIdInArray(productId, products);
 
@@ -74,9 +69,6 @@ class App extends Component {
       });
       this.setState({ cartItems: cartItems });
     } else {
-      /* const cartItemId = cartItems.findIndex((element) => {
-        return element.id === productId;
-      }); */
       const cartItemId = App.findObjectIndexByIdInArray(productId, cartItems);
       if (productData.unitsInStock > cartItems[cartItemId].quantity) {
         cartItems[cartItemId].quantity += 1;
@@ -96,8 +88,6 @@ class App extends Component {
 
   handleRemove(productId) {
     const { cartItems } = this.state;
-    // const cartItem = App.findObjectByIdInArray(productId, cartItems);
-    // const productData = App.findObjectByIdInArray(productId, products);
     const cartItemId = App.findObjectIndexByIdInArray(productId, cartItems);
     cartItems.splice(cartItemId, 1);
     this.setState({ cartItems });
